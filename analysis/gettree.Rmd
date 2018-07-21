@@ -1,0 +1,20 @@
+---
+title: "gettree"
+author: "Brian O'Meara"
+date: "2018-07-21"
+output: workflowr::wflow_html
+---
+
+## Introduction
+
+```{r}
+library(ape)
+library(phytools)
+treezip <- "http://files.opentreeoflife.org/synthesis/opentree9.1/opentree9.1_tree.tgz"
+download.file(treezip,destfile="opentree9.1_tree.tgz")
+untar("opentree9.1_tree.tgz")
+print(getwd())
+taxonomyplus.phy <- read.tree("opentree9.1_tree/labelled_supertree/labelled_supertree_ottnames.tre")
+treeonly.phy <- read.tree("opentree9.1_tree/grafted_solution/grafted_solution_ottnames.tre")
+save(taxonomyplus.phy, treeonly.phy, file="data/ott.rda")
+```
