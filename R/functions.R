@@ -14,7 +14,12 @@ get_trees <- function(clade="Hexapoda") {
   grafted.phy <- geiger::drop.random(grafted.phy, ape::Ntip(grafted.phy)-25)
   supertree.phy <- geiger::drop.random(supertree.phy, ape::Ntip(supertree.phy)-50)
 
+  grafted.phy <- convert_tiplabels_to_genbank(grafted.phy)
+  supertree.phy <- convert_tiplabels_to_genbank(supertree.phy)
 
+
+  save(grafted.phy, file="grafted.rda")
+  save(supertree.phy, file="supertree.rda")
   return(list(supertree.phy=supertree.phy, grafted.phy=grafted.phy ))
 }
 
@@ -55,8 +60,10 @@ extract_names <- function(phy) {
   all.names <- c(phy$tip.label, phy$node.label)
   node.numbers <- sequence(length(all.names))
   missing.names <- which(nchar(all.names)==0)
-  all.names <- all.names[-missing.names]
-  node.numbers <- node.numbers[-missing.names]
+  if(length(missing.names)>0) {
+    all.names <- all.names[-missing.names]
+    node.numbers <- node.numbers[-missing.names]
+  }
   final.df <- data.frame(taxon=all.names, node.id = node.numbers, is.tip = FALSE, stringsAsFactors=FALSE)
   final.df$is.tip[final.df$node.id<=ape::Ntip(phy)] <- TRUE
   return(final.df)
