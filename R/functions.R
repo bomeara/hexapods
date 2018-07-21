@@ -69,3 +69,27 @@ extract_names <- function(phy) {
   final.df$is.tip[final.df$node.id<=ape::Ntip(phy)] <- TRUE
   return(final.df)
 }
+
+get_funding <- function(taxon.dataframe) {
+  data(grants) #from rnsf
+  good.grant.indices <- which(grepl("systematics", grants$fundProgramName, ignore.case=TRUE))
+  good.grant.indices <- c(good.grant.indices, which(grepl("phylo", grants$fundProgramName, ignore.case=TRUE)))
+  good.grant.indices <- c(good.grant.indices, which(grepl("bioinformatics", grants$fundProgramName, ignore.case=TRUE)))
+  good.grant.indices <- c(good.grant.indices, which(grepl("taxonom", grants$fundProgramName, ignore.case=TRUE)))
+  good.grant.indices <- c(good.grant.indices, which(grepl("systematics", grants$abstractText, ignore.case=TRUE)))
+  good.grant.indices <- c(good.grant.indices, which(grepl("phylo", grants$abstractText, ignore.case=TRUE)))
+  good.grant.indices <- c(good.grant.indices, which(grepl("taxonom", grants$abstractText, ignore.case=TRUE)))
+  good.grant.indices <- c(good.grant.indices, which(grepl("bioinformatics", grants$abstractText, ignore.case=TRUE)))
+  good.grant.indices <- c(good.grant.indices, which(grepl("revision", grants$abstractText, ignore.case=TRUE)))
+  relevant.grants <- grants[unique(good.grant.indices),]
+  get_funding_for_taxon <- function(taxon) {
+    funding <- 0
+    matching.grant.indices <- unique(c(which(grepl(taxon, grants$abstractText, ignore.case=TRUE)), which(grepl(taxon, grants$title, ignore.case=TRUE))))
+    if(length(matching.grant.indices)>0) {
+      funding <- sum(relevant.grants$fundsObligatedAmt[matching.grant.indices], na.rm=TRUE)
+    }
+    return(funding)
+  }
+  taxon.dataframe$nsf.funding <- sapply(taxon.dataframe$taxon, get_funding_for_taxon)
+  return(taxon.dataframe)
+}

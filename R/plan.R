@@ -6,7 +6,8 @@ plan <- drake_plan(
   save(ot_supertree, file="ot_supertree.rda"),
   taxa_from_tree = extract_names(ot_supertree),
   taxa_with_genbank = wrap_seqs_in_genbank(taxa_from_tree),
-  save(taxa_with_genbank, file="taxa_with_genbank.rda"),
+  taxa_with_gb_and_funding = get_funding(taxa_with_genbank),
+  save(taxa_with_gb_and_funding, file="taxa_with_gb_and_funding.rda"),
   report = rmarkdown::render(
     knitr_in("report.Rmd"),
     output_file = file_out("report.html"),
