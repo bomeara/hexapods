@@ -1,5 +1,5 @@
 # hexapods
 
-A [workflowr][] project.
+Analyses for the hexapod tree of life FuturePhy meeting in Chicago, Aug 1-3, 2018. See deployed website at https://bomeara.github.io/hexapods/.
 
-[workflowr]: https://github.com/jdblischak/workflowr
+Site made with [workflowr]: https://github.com/jdblischak/workflowr
