@@ -59,10 +59,11 @@ seqs_in_genbank <- function(taxon, genes=c("COI", "cytochrome", "18S", "28S", "e
 extract_names <- function(phy) {
   all.names <- c(phy$tip.label, phy$node.label)
   node.numbers <- sequence(length(all.names))
-  missing.names <- which(nchar(all.names)==0)
-  if(length(missing.names)>0) {
-    all.names <- all.names[-missing.names]
-    node.numbers <- node.numbers[-missing.names]
+  bad.names <- which(nchar(all.names)==0)
+  bad.names <- unique(c(which(grepl("mrcaott", all.names))))
+  if(length(bad.names)>0) {
+    all.names <- all.names[-bad.names]
+    node.numbers <- node.numbers[-bad.names]
   }
   final.df <- data.frame(taxon=all.names, node.id = node.numbers, is.tip = FALSE, stringsAsFactors=FALSE)
   final.df$is.tip[final.df$node.id<=ape::Ntip(phy)] <- TRUE
