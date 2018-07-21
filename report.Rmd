@@ -1,0 +1,15 @@
+---
+title: "Hexapod summary"
+author: Brian O'Meara
+output: html_document
+---
+
+Run `make.R` to generate the output `report.pdf` and its dependencies.
+
+```{r content}
+library(drake)
+loadd(ot_supertree)
+loadd(ot_graftedtree)
+print(ot_supertree)
+print(ot_graftedtree)
+```
