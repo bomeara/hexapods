@@ -14,14 +14,14 @@ get_trees <- function(clade="Hexapoda") {
   #grafted.phy <- geiger::drop.random(grafted.phy, ape::Ntip(grafted.phy)-25)
   #supertree.phy <- geiger::drop.random(supertree.phy, ape::Ntip(supertree.phy)-50)
 
-  grafted.phy <- convert_tiplabels_to_genbank(grafted.phy)
-  supertree.phy <- convert_tiplabels_to_genbank(supertree.phy)
+  #grafted.phy <- convert_tiplabels_to_genbank(grafted.phy)
+  #supertree.phy <- convert_tiplabels_to_genbank(supertree.phy)
 
 
   return(list(supertree.phy=supertree.phy, grafted.phy=grafted.phy ))
 }
 
-convert_tiplabels_to_genbank <- function(phy) {
+convert_tiplabels_to_genbank_full_parse <- function(phy) {
   try_names <- function(x) {
     if(nchar(x)==0) {
       return(x)
@@ -37,6 +37,28 @@ convert_tiplabels_to_genbank <- function(phy) {
   }
   phy$tip.label <- sapply(phy$tip.label, try_names)
   phy$node.label <- sapply(phy$node.label, try_names)
+  return(phy)
+}
+
+convert_tiplabels_to_genbank_fast_parse <- function(phy) {
+  try_names_fast <- function(x) {
+    if(nchar(x)==0) {
+      return(x)
+    }
+    final.name <- strsplit(x,"_ott",x)[[1]][1]
+    final.name <- gsub("_", " ", final.name)
+    if(nchar(final.name) == nchar(x)) { #taxon Campsicnemussp.2KRG-2014ott5829692 is an example
+      ott.id <- gsub(".*ott","",x)
+      new.final <- NA
+      try(new.final <- rotl::tax_name(rotl::taxonomy_taxon_info(ott.id))[[1]])
+      if(!is.na(new.final)) {
+        final.name <- new.final
+      }
+    }
+    return(final.name)
+  }
+  phy$tip.label <- sapply(phy$tip.label, try_names_fast)
+  phy$node.label <- sapply(phy$node.label, try_names_fast)
   return(phy)
 }
 
