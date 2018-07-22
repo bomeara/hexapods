@@ -11,8 +11,8 @@ get_trees <- function(clade="Hexapoda") {
   grafted.phy <- ape::extract.clade(grafted.phy, grafted.phy$node.label[which(grepl(clade, grafted.phy$node.label))])
 
   #for debugging
-  grafted.phy <- geiger::drop.random(grafted.phy, ape::Ntip(grafted.phy)-25)
-  supertree.phy <- geiger::drop.random(supertree.phy, ape::Ntip(supertree.phy)-50)
+  #grafted.phy <- geiger::drop.random(grafted.phy, ape::Ntip(grafted.phy)-25)
+  #supertree.phy <- geiger::drop.random(supertree.phy, ape::Ntip(supertree.phy)-50)
 
   grafted.phy <- convert_tiplabels_to_genbank(grafted.phy)
   supertree.phy <- convert_tiplabels_to_genbank(supertree.phy)
