@@ -1,5 +1,28 @@
 # see also https://raw.githubusercontent.com/bomeara/phyloview/master/phyloview.Rmd and rphylotastic's darktaxa section
 
+get_genbank_taxonomy <- function(clade="Hexapoda") {
+  # TO DO : download genbank taxonmy file, so can match up ncbi ids from ot with genbank names
+}
+
+get_ot_taxonomy <- function(clade="Hexapoda") {
+  taxzip <- "http://files.opentreeoflife.org/ott/ott3.0/ott3.0.tgz"
+  download.file(taxzip,destfile="ott3.0.tgz")
+  untar("ott3.0.tgz")
+  ott.taxonomy <- readr::read_tsv("ott/taxonomy.tsv")
+  ott.taxonomy <- as.data.frame(ott.taxonomy)
+  ott.taxonomy <- ott.taxonomy[,!grepl("\\|", colnames(ott.taxonomy))] #dealing with pipes
+  ott.taxonomy <- ott.taxonomy[,!grepl("X", colnames(ott.taxonomy))]
+  extract_ncbi <- function(x) {
+    result <- gsub("ncbi:","",regmatches(x,regexpr("ncbi:\\d+", x, perl=TRUE)))
+    if(length(result)==0) {
+      result <- NA
+    }
+    return(result)
+  }
+  ott.taxonomy$ncbi.number <- sapply(ott.taxonomy$sourceinfo, extract_ncbi)
+  return(ott.taxonomy)
+}
+
 get_trees <- function(clade="Hexapoda") {
   treezip <- "http://files.opentreeoflife.org/synthesis/opentree9.1/opentree9.1_tree.tgz"
   download.file(treezip,destfile="opentree9.1_tree.tgz")
@@ -11,8 +34,8 @@ get_trees <- function(clade="Hexapoda") {
   grafted.phy <- ape::extract.clade(grafted.phy, grafted.phy$node.label[which(grepl(clade, grafted.phy$node.label))])
 
   #for debugging
-  grafted.phy <- geiger::drop.random(grafted.phy, ape::Ntip(grafted.phy)-25)
-  supertree.phy <- geiger::drop.random(supertree.phy, ape::Ntip(supertree.phy)-50)
+  #grafted.phy <- geiger::drop.random(grafted.phy, ape::Ntip(grafted.phy)-25)
+  #supertree.phy <- geiger::drop.random(supertree.phy, ape::Ntip(supertree.phy)-50)
 
   #grafted.phy <- convert_tiplabels_to_genbank(grafted.phy)
   #supertree.phy <- convert_tiplabels_to_genbank(supertree.phy)

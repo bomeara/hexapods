@@ -4,3 +4,5 @@ library(rotl)
 library(drake)
 library(rentrez)
 library(rnsf) # bomeara/rnsf on github
+library(readr)
+library(tibble)

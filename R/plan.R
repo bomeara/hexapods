@@ -1,5 +1,6 @@
 plan <- drake_plan(
   trees = get_trees(),
+  ot_taxonomy = get_ot_taxonomy(),
   print(trees),
   save(trees, file=file_out("ot_rawtrees.rda")),
   ot_supertree = convert_tiplabels_to_genbank_fast_parse(trees$supertree.phy),
