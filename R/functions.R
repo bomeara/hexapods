@@ -134,7 +134,7 @@ get_funding <- function(taxon.dataframe) {
 }
 
 get_counts_from_scholar <- function(family) {
-  page <- xml2::read_html(paste0('https://scholar.google.com/scholar?hl=en&as_sdt=0%2C14&q=', family, '+OR+', gsub("dae", "d", family), '+phylogeny+OR+phylogenetics+OR+phylogenetic+OR+cladistics+OR+cladistic&btnG='))
+  page <- xml2::read_html(paste0('https://scholar.google.com/scholar?hl=en&as_sdt=0%2C14&q=allintitle%3A+', family, '+OR+',gsub("dae", "d", family),'+topology+OR+phylogeny+OR+phylogenetics+OR+cladistics+OR+phylogenetic+OR+cladistic&btnG='))
   section <- rvest::html_nodes(page, '.gs_ab_mdw')[2]
   result <- gsub(",", "", gsub("About ", "", stringr::str_extract(as.character(section), "About \\d+\\,?\\d*+")))
   return(result)
