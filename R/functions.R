@@ -139,3 +139,16 @@ get_counts_from_scholar <- function(family) {
   result <- gsub(",", "", gsub("About ", "", stringr::str_extract(as.character(section), "About \\d+\\,?\\d*+")))
   return(result)
 }
+
+loop_counts_from_scholar <- function(sheet_name) {
+  taxonsheet <- googlesheets::gs_read(googlesheets::gs_title(sheet_name))
+  taxonsheet$ScholarCount <- 0
+  for(i in sequence(nrow(taxonsheet))) {
+    if(!is.na(taxonsheet$Family[i])) {
+      try(taxonsheet$ScholarCount[i] <- get_counts_from_scholar(taxonsheet$Family[i]))
+      print(paste(taxonsheet$Family[i], taxonsheet$ScholarCount[i]))
+      Sys.sleep(10)
+    }
+  }
+  return(taxonsheet)
+}

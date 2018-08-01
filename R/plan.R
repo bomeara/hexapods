@@ -20,3 +20,8 @@ plan <- drake_plan(
     quiet = TRUE
   )
 )
+
+scholarplan <_ drake_plan(
+  scholarinfo <- loop_counts_from_scholar("Coleoptera_fams_subfams_01Aug2018_NPL")
+  write.csv(scholarinfo, file="ScholarCounts.csv")
+)
