@@ -132,3 +132,10 @@ get_funding <- function(taxon.dataframe) {
   taxon.dataframe$nsf.funding <- sapply(taxon.dataframe$taxon, get_funding_for_taxon, r.grants=relevant.grants)
   return(taxon.dataframe)
 }
+
+get_counts_from_scholar <- function(family) {
+  page <- xml2::read_html(paste0('https://scholar.google.com/scholar?hl=en&as_sdt=0%2C14&q=', family, '+OR+', gsub("dae", "d", family), '+phylogeny+OR+phylogenetics+OR+phylogenetic+OR+cladistics+OR+cladistic&btnG='))
+  section <- rvest::html_nodes(page, '.gs_ab_mdw')[2]
+  result <- gsub(",", "", gsub("About ", "", stringr::str_extract(as.character(section), "About \\d+\\,?\\d*+")))
+  return(result)
+}

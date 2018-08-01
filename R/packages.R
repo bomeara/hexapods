@@ -6,3 +6,6 @@ library(rentrez)
 library(rnsf) # bomeara/rnsf on github
 library(readr)
 library(tibble)
+library(rvest)
+library(xml2)
+library(stringr)
