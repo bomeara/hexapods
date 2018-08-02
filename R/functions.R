@@ -1,7 +1,7 @@
 # see also https://raw.githubusercontent.com/bomeara/phyloview/master/phyloview.Rmd and rphylotastic's darktaxa section
 
 get_genbank_taxonomy <- function(clade="Hexapoda") {
-  # TO DO : download genbank taxonmy file, so can match up ncbi ids from ot with genbank names
+  # TO DO : download genbank taxonomy file, so can match up ncbi ids from ot with genbank names
 }
 
 get_ot_taxonomy <- function(clade="Hexapoda") {
@@ -88,6 +88,17 @@ convert_tiplabels_to_genbank_fast_parse <- function(phy) {
 wrap_seqs_in_genbank <- function(taxon.dataframe) {
   taxon.dataframe$genbank.count <- sapply(taxon.dataframe$taxon, seqs_in_genbank)
   return(taxon.dataframe)
+}
+
+wrap_dark_in_genbank <- function(taxon.dataframe) {
+  new.right.side <- sapply(taxon.dataframe$taxon, dark_in_genbank)
+  return(cbind(taxon.data.frame, new.right.side))
+}
+
+dark_in_genbank <- function(taxon) {
+  result <- rphylotastic::taxon_separate_dark_taxa_using_genbank(taxon, sleep=3)
+  result.df <- data.frame(dark.count=length(result$dark), binomial.count=length(result$known), dark.fraction=result$dark.fraction)
+  return(result.df)
 }
 
 seqs_in_genbank <- function(taxon, genes=c("COI", "cytochrome", "18S", "28S", "enolase", "elongation factor"), sleep.time=3) {
