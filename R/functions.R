@@ -91,13 +91,23 @@ wrap_seqs_in_genbank <- function(taxon.dataframe) {
 }
 
 wrap_dark_in_genbank <- function(taxon.dataframe) {
-  new.right.side <- sapply(taxon.dataframe$taxon, dark_in_genbank)
-  return(cbind(taxon.data.frame, new.right.side))
+  taxon.dataframe$genbank.dark.count <- NA
+  taxon.dataframe$genbank.known.count <- NA
+  taxon.dataframe$genbank.dark.fraction <- NA
+  for (i in sequence(nrow(taxon.dataframe))) {
+    local.df <- dark_in_genbank(taxon.dataframe$taxon[i])
+    if(nrow(local.df)==1) {
+      taxon.dataframe$genbank.dark.count[i] <- local.df$dark.count
+      taxon.dataframe$genbank.known.count[i] <- local.df$known.count
+      taxon.dataframe$genbank.dark.fraction[i] <- local.df$fraction.dark
+    }
+  }
+  return(taxon.dataframe)
 }
 
 dark_in_genbank <- function(taxon) {
   result <- rphylotastic::taxon_separate_dark_taxa_using_genbank(taxon, sleep=3)
-  result.df <- data.frame(dark.count=length(result$dark), binomial.count=length(result$known), dark.fraction=result$dark.fraction)
+  result.df <- data.frame(dark.count=length(result$dark), known.count=length(result$known), fraction.dark=result$fraction.dark)
   return(result.df)
 }
 
