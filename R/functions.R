@@ -115,9 +115,9 @@ extract_names <- function(phy) {
 
 get_funding <- function(taxon.dataframe) {
   data(grants) #from rnsf
-  good.grant.indices <- which(grepl("systematics|phylo|bioinfor|taxonom|revision", grants$fundProgramName, ignore.case=TRUE))
-  good.grant.indices <- c(good.grant.indices,which(grepl("systematics|phylo|bioinfor|taxonom|revision", grants$abstractText, ignore.case=TRUE)))
-  good.grant.indices <- c(good.grant.indices,which(grepl("systematics|phylo|bioinfor|taxonom|revision", grants$title, ignore.case=TRUE)))
+  good.grant.indices <- which(grepl("systematics|phylo|bioinfor|taxonom|revision|peet", grants$fundProgramName, ignore.case=TRUE))
+  good.grant.indices <- c(good.grant.indices,which(grepl("systematics|phylo|bioinfor|taxonom|revision|peet", grants$abstractText, ignore.case=TRUE)))
+  good.grant.indices <- c(good.grant.indices,which(grepl("systematics|phylo|bioinfor|taxonom|revision|peet", grants$title, ignore.case=TRUE)))
 
 
   relevant.grants <- grants[unique(good.grant.indices),]
@@ -233,4 +233,43 @@ train_tree_model <- function(train_dir = "training", validation_dir="validation"
    validation_steps = 3
   )
   return(model)
+}
+
+predict_using_model <- function(dir, model) {
+  original.dir <- getwd()
+  setwd(dir)
+  image_prep <- function(x) {
+    arrays <- lapply(x, function(dir) {
+      img <- image_load(dir, target_size = c(150,150))
+      x <- image_to_array(img)
+      x <- array_reshape(x, c(1, dim(x)))
+      x <- imagenet_preprocess_input(x)
+    })
+    do.call(abind::abind, c(arrays, list(along = 1)))
+  }
+  files <- system(paste0("ls -1 ", dir), intern=TRUE)
+  res <- predict(model, image_prep(files))[,1]
+  names(res) <- files
+  setwd(original.dir)
+  return(res)
+}
+
+#' Runs on one line
+extract_classification_from_gnr_resolve <- function(x) {
+  result <- data.frame(t(strsplit(x['classification_path'], "\\|",)[[1]]), stringsAsFactors=FALSE)
+  colnames(result) <- t(strsplit(x['classification_path_ranks'], "\\|",)[[1]])
+  result <- cbind(data.frame(taxon=x['matched_name'], user_supplied_name=x['user_supplied_name'], taxon_rank=colnames(result)[ncol(result)], stringsAsFactors=FALSE), result)
+  return(result)
+}
+
+extract_taxon_info_from_paper <- function(file) {
+  taxa <- rphylotastic::file_get_scientific_names(file)
+  taxa.resolved <-  as.data.frame(taxize::gnr_resolve(taxa, data_source_ids = 1, best_match_only = TRUE, fields="all"), stringsAsFactors=FALSE)
+  all.taxa <- plyr::rbind.fill(apply(taxa.resolved, 1,extract_classification_from_gnr_resolve))
+}
+
+get_families <- function() {
+  # insecta: ae304a1e0beadcfec04932589049bb5a
+  families_raw <- taxize::downstream('ae304a1e0beadcfec04932589049bb5a', downto = 'Family', db = 'col')[[1]]$childtaxa_name
+  return(families_raw[!grepl(' ', families_raw)] ) #get rid of ones that are "Not assigned"
 }

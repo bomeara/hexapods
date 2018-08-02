@@ -21,7 +21,13 @@ plan <- drake_plan(
   )
 )
 
-scholarplan <_ drake_plan(
+familyrun <- drake_plan(
+  families = get_families(),
+  taxa_with_funding = get_funding(data.frame(taxon=families, stringsAsFactors=FALSE))
+
+)
+
+scholarplan <- drake_plan(
   scholarinfo <- loop_counts_from_scholar("Coleoptera_fams_subfams_01Aug2018_NPL")
   write.csv(scholarinfo, file="ScholarCounts.csv")
 )
