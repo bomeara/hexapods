@@ -134,6 +134,7 @@ get_funding <- function(taxon.dataframe) {
 }
 
 get_counts_from_scholar <- function(family) {
+  #TODO Add '+OR+' between multiple entries
   page <- xml2::read_html(paste0('https://scholar.google.com/scholar?hl=en&as_sdt=0%2C14&q=allintitle%3A+', family, '+topology+OR+phylogeny+OR+phylogenetics+OR+cladistics+OR+phylogenetic+OR+cladistic&btnG='))
   section <- rvest::html_nodes(page, '.gs_ab_mdw')[2]
   result <- gsub(",", "", gsub("About ", "", stringr::str_extract(as.character(section), "About \\d+\\,?\\d*+")))
@@ -153,6 +154,83 @@ loop_counts_from_scholar <- function(sheet_name) {
   return(taxonsheet)
 }
 
-get_publication_counts_from_pubmed <- function(taxon) {
+get_figures_from_plosone <- function(query="phylogeny", dir=NULL) {
+  original.dir <- getwd()
+  if(!is.null(dir)) {
+    if(!dir.exists(dir)) {
+      dir.create(dir)
+    }
+    setwd(dir)
+  }
+  results <- rplos::searchplos(q= query, fl= "id", limit = 1000, fq='journal_key:PLoSONE')$data$id
+  for (i in seq_along(results)) {
+    for (fig.index in sequence(2)) {
+      try(utils::download.file(paste0('http://journals.plos.org/plosone/article/figure/image?size=large&download=&id=', results[i], '.g00', fig.index), destfile=paste0('Fig_', gsub('/','_',results[i]), '.g00', fig.index, '.png'), method="internal"))
+      Sys.sleep(6)
+    }
+  }
+  setwd(original.dir)
+}
 
+train_tree_model <- function(train_dir = "training", validation_dir="validation") {
+
+  # model <- application_vgg16(
+  #   weights = "imagenet",
+  #   include_top = FALSE
+  # )
+
+  test_datagen <- image_data_generator(rescale = 1/255)
+
+  train_generator <- flow_images_from_directory(
+  train_dir,                  # Target directory
+  test_datagen,              # Data generator
+  target_size = c(150, 150),  # Resizes all images to 150 × 150
+  batch_size = 20,
+  class_mode = "binary"       # binary_crossentropy loss for binary labels
+  )
+
+  validation_generator <- flow_images_from_directory(
+    validation_dir,
+    test_datagen,
+    target_size = c(150, 150),  # Resizes all images to 150 × 150
+    batch_size = 20,
+    class_mode = "binary"
+  )
+
+#   model %>% compile(
+#   loss = "binary_crossentropy",
+#   optimizer = optimizer_rmsprop(lr = 2e-5),
+#   metrics = c("accuracy")
+# )
+
+  conv_base <- application_vgg16(
+    weights = "imagenet",
+    include_top = FALSE,
+    input_shape = c(150, 150, 3)
+  )
+
+  model <- keras_model_sequential() %>%
+    conv_base %>%
+    layer_flatten() %>%
+    layer_dense(units = 256, activation = "relu") %>%
+    layer_dense(units = 1, activation = "sigmoid")
+
+    freeze_weights(conv_base)
+
+  opt <- optimizer_rmsprop(lr = 0.0001, decay = 1e-6)
+
+  model %>% compile(
+    loss = "mse",
+    optimizer = opt,
+    metrics = "accuracy"
+  )
+
+  history <- model %>% fit_generator(
+   train_generator,
+   steps_per_epoch = 30,
+   epochs = 50,
+   validation_data = validation_generator,
+   validation_steps = 3
+  )
+  return(model)
 }
