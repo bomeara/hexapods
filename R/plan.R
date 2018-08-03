@@ -30,6 +30,11 @@ familyrun <- drake_plan(
   taxa_with_funding_genbank_dark = wrap_dark_in_genbank(taxa_with_funding_genbank),
   write.csv(taxa_with_funding_genbank_dark, file=file_out("taxa_with_funding_genbank_dark.csv"))
 )
+
+taxarun <- drake_plan(
+  taxon.names = extract_taxon_info_from_dir_of_papers(),
+  write.csv(taxon.names, file=file_out("taxa_from_papers"))
+)
 #
 # scholarplan <- drake_plan(
 #   scholarinfo <- loop_counts_from_scholar("Coleoptera_fams_subfams_01Aug2018_NPL")

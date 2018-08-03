@@ -289,8 +289,38 @@ extract_taxon_info_from_paper <- function(file) {
   all.taxa <- plyr::rbind.fill(apply(taxa.resolved, 1,extract_classification_from_gnr_resolve))
 }
 
+extract_taxon_info_from_dir_of_papers <- function(path='/Users/bomeara/Google Drive/SoToL Hexapods (File responses)/Full paper (File responses)/') {
+  original.dir <- getwd()
+  setwd(path)
+  files <- system("ls -1", intern=TRUE)
+  results <- data.frame()
+  for (i in seq_along(files)) {
+    local.results <- data.frame()
+    try(local.results <- extract_taxon_info_from_paper(files[i]))
+    if(nrow(local.results)>0) {
+      local.results$paper <- files[i]
+      results <- plyr::rbind.fill(results, local.results)
+    }
+  }
+  setwd(original.dir)
+  return(results)
+}
+
 get_families <- function() {
   # insecta: ae304a1e0beadcfec04932589049bb5a
   families_raw <- taxize::downstream('ae304a1e0beadcfec04932589049bb5a', downto = 'Family', db = 'col')[[1]]$childtaxa_name
   return(families_raw[!grepl(' ', families_raw)] ) #get rid of ones that are "Not assigned"
+}
+
+get_otol_tree <- function(taxa) {
+  taxa <- as.character(taxa)
+  ott_ids <- rep(NA, length(taxa))
+  taxa.chunks <- split(taxa, ceiling(seq_along(taxa)/250))
+  position <- 0
+  for (i in sequence(length(taxa.chunks))) {
+    ott_ids[(position+1):(position+length(taxa.chunks[[i]]))] <- rotl::tnrs_match_names(taxa.chunks[[i]])$ott_id
+    position <- position + length(taxa.chunks[[i]])
+  }
+  ott_ids <- ott_ids[!is.na(ott_ids)]
+
 }
