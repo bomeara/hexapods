@@ -33,7 +33,7 @@ familyrun <- drake_plan(
 
 taxarun <- drake_plan(
   taxon.names = extract_taxon_info_from_dir_of_papers(),
-  write.csv(taxon.names, file=file_out("taxa_from_papers"))
+  write.csv(taxon.names, file=file_out("taxa_from_papers.csv"))
 )
 #
 # scholarplan <- drake_plan(
