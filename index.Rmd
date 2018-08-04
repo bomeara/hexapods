@@ -6,7 +6,8 @@ output: html_document
 
 
 
-```{r summary, echo=FALSE}
+```{r summary, echo=FALSE, message=FALSE}
 readd(taxa_df)
-print(paste0("We are gathering info for ", length(taxa_df$Family), " families"))
 ```
+
+We are gathering info on `r length(taxa_df$Family)` families.

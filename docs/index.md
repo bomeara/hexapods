@@ -2764,6 +2764,4 @@ output: html_document
 ## 484                        #DIV/0!  NA  NA  NA  NA            Therevidae
 ```
 
-```
-## [1] "We are gathering info for 458 families"
-```
+We are gathering info on 458 families.
