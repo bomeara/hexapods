@@ -1,0 +1,41 @@
+---
+title: "Analyses from the FuturePhy Hexapod group"
+author: Brian O'Meara
+output: html_document
+---
+
+# State of the hexapod tree of life
+
+```{r summary, echo=FALSE, message=FALSE}
+library(treemap)
+loadd(taxa_df)
+loadd(taxa_dark)
+taxa_dark$OrderOnly <- gsub("Hexapoda: ","", taxa_dark$Order)
+```
+
+We are planning to gather info on `r length(taxa_df$Family)` families.
+
+The code for these analyses is all in https://github.com/bomeara/hexapods. The ROpenSci package `drake` is used to dynamically run analyses to generate content (including this page).
+
+
+## Binomials per clade in GenBank
+
+```{r plotgenbankknown, echo=FALSE, message=FALSE}
+treemap::treemap(taxa_dark, index=c("OrderOnly", "Family"), vSize="genbank.known.count", type="index")
+```
+
+## Dark taxa per clade in GenBank
+
+```{r plotgenbankdark, echo=FALSE, message=FALSE}
+treemap::treemap(taxa_dark, index=c("OrderOnly", "Family"), vSize="genbank.dark.count", type="index")
+```
+
+## BOLD taxa per clade in GenBank
+
+```{r plotgenbankbold, echo=FALSE, message=FALSE}
+treemap::treemap(taxa_dark, index=c("OrderOnly", "Family"), vSize="genbank.BOLD.count", type="index")
+```
+
+## Funding
+
+The core grant for this was NSF [FuturePhy grant ID]. Participation and tools was also supported by grants [GN], [Phylotastic], [more]

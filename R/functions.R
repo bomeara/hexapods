@@ -94,20 +94,32 @@ wrap_dark_in_genbank <- function(taxon.dataframe) {
   taxon.dataframe$genbank.dark.count <- NA
   taxon.dataframe$genbank.known.count <- NA
   taxon.dataframe$genbank.dark.fraction <- NA
+  taxon.dataframe$genbank.dark.taxa <- NA
+  taxon.dataframe$genbank.known.taxa <- NA
+  taxon.dataframe$genbank.BOLD.taxa <- NA
+  taxon.dataframe$genbank.BOLD.count <- NA
   for (i in sequence(nrow(taxon.dataframe))) {
+    cat(paste0("Doing taxon ", taxon.dataframe$taxon[i], " which is ", i, " of ",nrow(taxon.dataframe), "\n"))
     local.df <- dark_in_genbank(taxon.dataframe$taxon[i])
     if(nrow(local.df)==1) {
       taxon.dataframe$genbank.dark.count[i] <- local.df$dark.count
       taxon.dataframe$genbank.known.count[i] <- local.df$known.count
       taxon.dataframe$genbank.dark.fraction[i] <- local.df$fraction.dark
+      taxon.dataframe$genbank.dark.taxa[i] <- local.df$dark.taxa
+      taxon.dataframe$genbank.known.taxa[i] <- local.df$known.taxa
+      taxon.dataframe$genbank.BOLD.taxa[i] <- local.df$BOLD.taxa
+      taxon.dataframe$genbank.BOLD.count[i] <- local.df$BOLD.count
     }
+    cat(paste0("It had ", taxon.dataframe$genbank.known.count[i], " binomials\n"))
   }
   return(taxon.dataframe)
 }
 
 dark_in_genbank <- function(taxon) {
   result <- rphylotastic::taxon_separate_dark_taxa_using_genbank(taxon, sleep=3)
-  result.df <- data.frame(dark.count=length(result$dark), known.count=length(result$known), fraction.dark=result$fraction.dark)
+  all.taxa <- c(result$dark, result$known)
+  BOLD.taxa <- all.taxa[grepl("BOLD", all.taxa)]
+  result.df <- data.frame(dark.count=length(result$dark), known.count=length(result$known), fraction.dark=result$fraction.dark, dark.taxa=paste(result$dark, collapse="|"), known.taxa=paste(result$known, collapse="|"), BOLD.taxa=paste(BOLD.taxa, collapse="|"), BOLD.count=length(BOLD.taxa))
   return(result.df)
 }
 
@@ -298,11 +310,13 @@ extract_taxon_info_from_dir_of_papers <- function(path='/Users/bomeara/Google Dr
   files <- system("ls -1", intern=TRUE)
   results <- data.frame()
   for (i in seq_along(files)) {
-    local.results <- data.frame()
-    try(local.results <- extract_taxon_info_from_paper(files[i]))
-    if(nrow(local.results)>0) {
-      local.results$paper <- files[i]
-      results <- plyr::rbind.fill(results, local.results)
+    if(!grepl(',', files[i])) { #b/c commas cause problems
+      local.results <- data.frame()
+      try(local.results <- extract_taxon_info_from_paper(files[i]))
+      if(nrow(local.results)>0) {
+        local.results$paper <- files[i]
+        results <- plyr::rbind.fill(results, local.results)
+      }
     }
   }
   setwd(original.dir)
