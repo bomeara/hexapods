@@ -309,10 +309,38 @@ extract_taxon_info_from_dir_of_papers <- function(path='/Users/bomeara/Google Dr
   return(results)
 }
 
-get_families <- function() {
-  # insecta: ae304a1e0beadcfec04932589049bb5a
-  families_raw <- taxize::downstream('ae304a1e0beadcfec04932589049bb5a', downto = 'Family', db = 'col')[[1]]$childtaxa_name
-  return(families_raw[!grepl(' ', families_raw)] ) #get rid of ones that are "Not assigned"
+
+#' Get a vector of families
+#'
+#' Can be from insects from Catalog of Life or from our handcoded one
+#'
+#' @param use_col If TRUE, gets insect families from Catalog of Life; otherwise, uses our list
+#' @return Character vector of family names
+#' @export
+get_families <- function(use_col=TRUE) {
+  families <- c()
+  if(use_col) {
+    # insecta: ae304a1e0beadcfec04932589049bb5a
+    families_raw <- taxize::downstream('ae304a1e0beadcfec04932589049bb5a', downto = 'Family', db = 'col')[[1]]$childtaxa_name
+    families <- families_raw[!grepl(' ', families_raw)]  #get rid of ones that are "Not assigned"
+  } else {
+    cladesheet <- googlesheets::gs_read(googlesheets::gs_title('Hexapoda data sheet'), ws='Family level data')
+    families <- cladesheet$Family
+    families <- families[!is.na(families)]
+  }
+  return(families)
+}
+
+#' Get hexapoda info
+#'
+#' Pulls info from Hexapoda data sheet
+#' @return data.frame of all info entered into the family level data
+#' @export
+get_hexapoda_info <- function() {
+  cladesheet <- as.data.frame(googlesheets::gs_read(googlesheets::gs_title('Hexapoda data sheet'), ws='Family level data'))
+  cladesheet <- subset(cladesheet, !is.na(cladesheet$Family))
+  cladesheet$taxon <- cladesheet$Family
+  return(cladesheet)
 }
 
 get_otol_tree <- function(taxa) {

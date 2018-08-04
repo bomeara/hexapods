@@ -21,15 +21,27 @@
 #   )
 # )
 
+# familyrun <- drake_plan(
+#   families = get_families(),
+#   taxa_with_funding = get_funding(data.frame(taxon=families, stringsAsFactors=FALSE)),
+#   write.csv(taxa_with_funding, file=file_out("taxa_with_funding.csv")),
+#   taxa_with_funding_genbank = wrap_seqs_in_genbank(taxa_with_funding),
+#   write.csv(taxa_with_funding_genbank, file=file_out("taxa_with_funding_genbank.csv")),
+#   taxa_with_funding_genbank_dark = wrap_dark_in_genbank(taxa_with_funding_genbank),
+#   write.csv(taxa_with_funding_genbank_dark, file=file_out("taxa_with_funding_genbank_dark.csv"))
+# )
+
+
 familyrun <- drake_plan(
-  families = get_families(),
-  taxa_with_funding = get_funding(data.frame(taxon=families, stringsAsFactors=FALSE)),
-  write.csv(taxa_with_funding, file=file_out("taxa_with_funding.csv")),
-  taxa_with_funding_genbank = wrap_seqs_in_genbank(taxa_with_funding),
-  write.csv(taxa_with_funding_genbank, file=file_out("taxa_with_funding_genbank.csv")),
-  taxa_with_funding_genbank_dark = wrap_dark_in_genbank(taxa_with_funding_genbank),
-  write.csv(taxa_with_funding_genbank_dark, file=file_out("taxa_with_funding_genbank_dark.csv"))
+  taxa_df = get_hexapoda_info(),
+  write.csv(taxa_df, file=file_out("docs/raw_taxa.csv"))
 )
+#   taxa_genbank = wrap_seqs_in_genbank(taxa_df),
+#   write.csv(taxa_with_funding_genbank, file=file_out("taxa_with_funding_genbank.csv")),
+#   taxa_with_funding_genbank_dark = wrap_dark_in_genbank(taxa_with_funding_genbank),
+#   write.csv(taxa_with_funding_genbank_dark, file=file_out("taxa_with_funding_genbank_dark.csv"))
+# )
+
 
 taxarun <- drake_plan(
   taxon.names = extract_taxon_info_from_dir_of_papers(),
