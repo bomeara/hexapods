@@ -6,6 +6,8 @@ output: html_document
 
 # State of the hexapod tree of life
 
+This is work *in progress* from the Hexapod FuturePhy group (meeting in Chicago, Aug. 1-3, 2018). It will update as we add information.
+
 ```{r summary, echo=FALSE, message=FALSE}
 library(treemap)
 loadd(taxa_df)
@@ -13,7 +15,7 @@ loadd(taxa_dark)
 taxa_dark$OrderOnly <- gsub("Hexapoda: ","", taxa_dark$Order)
 ```
 
-We are planning to gather info on `r length(taxa_df$Family)` families.
+For example, we are planning to gather info on `r length(taxa_df$Family)` families so far, but other families will be added.
 
 The code for these analyses is all in https://github.com/bomeara/hexapods. The ROpenSci package `drake` is used to dynamically run analyses to generate content (including this page).
 

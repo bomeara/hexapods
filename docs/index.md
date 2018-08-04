@@ -6,9 +6,11 @@ output: html_document
 
 # State of the hexapod tree of life
 
+This is work *in progress* from the Hexapod FuturePhy group (meeting in Chicago, Aug. 1-3, 2018). It will update as we add information.
 
 
-We are planning to gather info on 458 families.
+
+For example, we are planning to gather info on 458 families so far, but other families will be added.
 
 The code for these analyses is all in https://github.com/bomeara/hexapods. The ROpenSci package `drake` is used to dynamically run analyses to generate content (including this page).
 
