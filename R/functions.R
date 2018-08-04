@@ -134,7 +134,7 @@ extract_names <- function(phy) {
   return(final.df)
 }
 
-get_funding <- function(taxon.dataframe) {
+get_funding <- function(taxon.dataframe, stem_name=TRUE) {
   data(grants) #from rnsf
   good.grant.indices <- which(grepl("systematics|phylo|bioinfor|taxonom|revision|peet", grants$fundProgramName, ignore.case=TRUE))
   good.grant.indices <- c(good.grant.indices,which(grepl("systematics|phylo|bioinfor|taxonom|revision|peet", grants$abstractText, ignore.case=TRUE)))
@@ -142,8 +142,11 @@ get_funding <- function(taxon.dataframe) {
 
 
   relevant.grants <- grants[unique(good.grant.indices),]
-  get_funding_for_taxon <- function(taxon, r.grants) {
+  get_funding_for_taxon <- function(taxon, r.grants, stem_name=TRUE) {
     funding <- 0
+    if(stem_name) {
+      taxon <- gsub("dae", "d", taxon)
+    }
     matching.grant.indices <- unique(c(which(grepl(taxon, r.grants$abstractText, ignore.case=TRUE)), which(grepl(taxon, r.grants$title, ignore.case=TRUE))))
     if(length(matching.grant.indices)>0) {
       funding <- sum(as.numeric(r.grants$fundsObligatedAmt[matching.grant.indices]), na.rm=TRUE)
@@ -155,7 +158,7 @@ get_funding <- function(taxon.dataframe) {
 }
 
 get_counts_from_scholar <- function(family) {
-  #TODO Add '+OR+' between multiple entries
+  #TODO Add '+OR+' between multiple entries (which will come in as family)
   page <- xml2::read_html(paste0('https://scholar.google.com/scholar?hl=en&as_sdt=0%2C14&q=allintitle%3A+', family, '+topology+OR+phylogeny+OR+phylogenetics+OR+cladistics+OR+phylogenetic+OR+cladistic&btnG='))
   section <- rvest::html_nodes(page, '.gs_ab_mdw')[2]
   result <- gsub(",", "", gsub("About ", "", stringr::str_extract(as.character(section), "About \\d+\\,?\\d*+")))
@@ -169,7 +172,7 @@ loop_counts_from_scholar <- function(sheet_name) {
     if(!is.na(taxonsheet$Family[i])) {
       try(taxonsheet$ScholarCount[i] <- get_counts_from_scholar(taxonsheet$Family[i]))
       print(paste(taxonsheet$Family[i], taxonsheet$ScholarCount[i]))
-      Sys.sleep(10)
+      Sys.sleep(60*15)
     }
   }
   return(taxonsheet)
