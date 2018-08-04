@@ -34,7 +34,10 @@
 
 familyrun <- drake_plan(
   taxa_df = get_hexapoda_info(),
-  write.csv(taxa_df, file=file_out("docs/raw_taxa.csv"))
+  write.csv(taxa_df, file=file_out("docs/taxa_raw.csv")),
+  #taxa_genbank = wrap_seqs_in_genbank(taxa_df),
+  #write.csv(taxa_genbank, file=file_out("docs/taxa_genbank.csv")),
+  report = knit(knitr_in("index.Rmd"), file_out("docs/index.md"), quiet = TRUE)
 )
 #   taxa_genbank = wrap_seqs_in_genbank(taxa_df),
 #   write.csv(taxa_with_funding_genbank, file=file_out("taxa_with_funding_genbank.csv")),

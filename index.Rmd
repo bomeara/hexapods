@@ -1,0 +1,12 @@
+---
+title: "Analyses from the FuturePhy Hexapod group"
+author: Brian O'Meara
+output: html_document
+---
+
+
+
+```{r summary, echo=FALSE}
+readd(taxa_df)
+print(paste0("We are gathering info for ", length(taxa_df$Family), " families"))
+```
