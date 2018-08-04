@@ -10,4 +10,4 @@ output: html_document
 readd(taxa_df)
 ```
 
-We are gathering info on `r length(taxa_df$Family)` families.
+We are planning to gather info on `r length(taxa_df$Family)` families.
