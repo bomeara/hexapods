@@ -41,8 +41,17 @@ treemap::treemap(taxa_col, index=c("OrderOnly", "Family"), vSize="genbank.BOLD.c
 
 ```{r plotgbvscol, echo=FALSE, message=FALSE, fig.width=14, fig.height=14}
   taxa_col_present <- subset(taxa_col, taxa_col$col.species.count>0)
-  plot(x=taxa_col_present$col.species.count, y=taxa_col_present$genbank.known.count, pch=19, xlab="Number of species in Catalog of Life", ylab="Number of binomial species in GenBank", bty="n")
+  taxa_col_gb_present <- subset(taxa_col_present, taxa_col_present$genbank.known.count>0)
+
+  plot(x=taxa_col_gb_present$col.species.count, y=taxa_col_gb_present$genbank.known.count, pch=19, xlab="Number of species in Catalog of Life", ylab="Number of binomial species in GenBank", bty="n", log="xy")
+  abline(a=0, b=1, col="red")
+  abline(a=0, b=.5, col="purple")
+  abline(a=0, b=.1, col="blue")
+
+
 ```
+
+Lines show 100%, 50%, 10% of Catalog of Life species in GenBank (note that this is based on species counts in familes, not 1:1 matching).
 
 ## Funding
 

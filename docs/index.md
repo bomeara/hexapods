@@ -31,6 +31,8 @@ The code for these analyses is all in https://github.com/bomeara/hexapods. The R
 
 ![plot of chunk plotgbvscol](figure/plotgbvscol-1.png)
 
+Lines show 100%, 50%, 10% of Catalog of Life species in GenBank (note that this is based on species counts in familes, not 1:1 matching).
+
 ## Funding
 
 The core grant for this was NSF [FuturePhy grant ID]. Participation and tools was also supported by grants [GN], [Phylotastic], [more]
