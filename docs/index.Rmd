@@ -10,12 +10,11 @@ This is work *in progress* from the Hexapod FuturePhy group (meeting in Chicago,
 
 ```{r summary, echo=FALSE, message=FALSE}
 library(treemap)
-loadd(taxa_df)
-loadd(taxa_dark)
-taxa_dark$OrderOnly <- gsub("Hexapoda: ","", taxa_dark$Order)
+loadd(taxa_col)
+taxa_col$OrderOnly <- gsub("Hexapoda: ","", taxa_col$Order)
 ```
 
-For example, we are planning to gather info on `r length(taxa_df$Family)` families so far, but other families will be added.
+For example, we are planning to gather info on `r length(taxa_col$Family)` families so far, but other families will be added.
 
 The code for these analyses is all in https://github.com/bomeara/hexapods. The ROpenSci package `drake` is used to dynamically run analyses to generate content (including this page).
 
@@ -23,19 +22,26 @@ The code for these analyses is all in https://github.com/bomeara/hexapods. The R
 ## Binomials per clade in GenBank
 
 ```{r plotgenbankknown, echo=FALSE, message=FALSE, fig.width=14, fig.height=14}
-treemap::treemap(taxa_dark, index=c("OrderOnly", "Family"), vSize="genbank.known.count", type="index")
+treemap::treemap(taxa_col, index=c("OrderOnly", "Family"), vSize="genbank.known.count", type="index")
 ```
 
 ## Dark taxa per clade in GenBank
 
 ```{r plotgenbankdark, echo=FALSE, message=FALSE, fig.width=14, fig.height=14}
-treemap::treemap(taxa_dark, index=c("OrderOnly", "Family"), vSize="genbank.dark.count", type="index")
+treemap::treemap(taxa_col, index=c("OrderOnly", "Family"), vSize="genbank.dark.count", type="index")
 ```
 
 ## BOLD taxa per clade in GenBank
 
 ```{r plotgenbankbold, echo=FALSE, message=FALSE, fig.width=14, fig.height=14}
-treemap::treemap(taxa_dark, index=c("OrderOnly", "Family"), vSize="genbank.BOLD.count", type="index")
+treemap::treemap(taxa_col, index=c("OrderOnly", "Family"), vSize="genbank.BOLD.count", type="index")
+```
+
+## Species in GenBank vs diversity in Catalog of Life
+
+```{r plotgbvscol, echo=FALSE, message=FALSE, fig.width=14, fig.height=14}
+  taxa_col_present <- subset(taxa_col, taxa_col$col.species.count>0)
+  plot(x=taxa_col_present$col.species.count, y=taxa_col_present$genbank.known.count, pch=19, xlab="Number of species in Catalog of Life", ylab="Number of binomial species in GenBank", bty="n")
 ```
 
 ## Funding

@@ -46,6 +46,8 @@ familyrun <- drake_plan(
   write.csv(all_species_merged, file=file_out("docs/all_species_merged.csv")),
   all_species_hierarchy = extract_ranks_from_all_species(all_species_merged$childtaxa_name),
   write.csv(all_species_hierarchy, file=file_out("docs/all_species_hierarchy.csv")),
+  taxa_col = add_col_counts(taxa_dark, all_species_hierarchy),
+  write.csv(taxa_col, file=file_out("docs/taxa_col.csv")),
   report = knit(knitr_in("docs/index.Rmd"), file_out("docs/index.md"), quiet = TRUE)
 )
 

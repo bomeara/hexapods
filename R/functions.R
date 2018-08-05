@@ -391,3 +391,16 @@ extract_ranks_from_all_species <- function(species_vector) {
   all.taxa <- plyr::rbind.fill(apply(taxa.resolved, 1,extract_classification_from_gnr_resolve))
   return(all.taxa)
 }
+
+add_col_counts <- function(taxon.dataframe, col.dataframe) {
+  family_counts <- table(col.dataframe$family)
+  taxon.dataframe$col.species.count <- 0
+  for (i in sequence(nrow(taxon.dataframe))) {
+    new.count <- NA
+    try(new.count <- family_counts[taxon.dataframe$Family[i]])
+    if(!is.na(new.count)) {
+      taxon.dataframe$col.species.count[i] <- new.count
+    }
+  }
+  return(taxon.dataframe)
+}

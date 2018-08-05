@@ -27,6 +27,10 @@ The code for these analyses is all in https://github.com/bomeara/hexapods. The R
 
 ![plot of chunk plotgenbankbold](figure/plotgenbankbold-1.png)
 
+## Species in GenBank vs diversity in Catalog of Life
+
+![plot of chunk plotgbvscol](figure/plotgbvscol-1.png)
+
 ## Funding
 
 The core grant for this was NSF [FuturePhy grant ID]. Participation and tools was also supported by grants [GN], [Phylotastic], [more]
