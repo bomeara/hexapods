@@ -41,8 +41,13 @@ familyrun <- drake_plan(
   write.csv(taxa_dark, file=file_out("docs/taxa_dark.csv")),
   #taxa_genbank = wrap_seqs_in_genbank(taxa_df),
   #write.csv(taxa_genbank, file=file_out("docs/taxa_genbank.csv")),
+  all_species = get_all_species_from_col(),
+  all_species_merged = merge_all_species(all_species),
+  write.csv(all_species_merged, file=file_out("docs/all_species_merged.csv")),
   report = knit(knitr_in("docs/index.Rmd"), file_out("docs/index.md"), quiet = TRUE)
 )
+
+
 #   taxa_genbank = wrap_seqs_in_genbank(taxa_df),
 #   write.csv(taxa_with_funding_genbank, file=file_out("taxa_with_funding_genbank.csv")),
 #   taxa_with_funding_genbank_dark = wrap_dark_in_genbank(taxa_with_funding_genbank),

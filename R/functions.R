@@ -369,3 +369,19 @@ get_otol_tree <- function(taxa) {
   ott_ids <- ott_ids[!is.na(ott_ids)]
 
 }
+
+#insects and entognatha
+get_all_species_from_col <- function(taxa=c("ae304a1e0beadcfec04932589049bb5a", "4c1dcc0dbcdea1f75be02a4f0bb51711")) {
+  species <- taxize::downstream(taxa, db="col", downto="species")
+  return(species)
+}
+
+merge_all_species <- function(x) {
+  result <- x[[1]][1]
+  if(length(x)>1) {
+    for (i in 2:length(x)) {
+      result <- plyr::rbind.fill(result, x[[i]][1])
+    }
+  }
+  return(result)
+}
