@@ -45,13 +45,13 @@ treemap::treemap(taxa_col, index=c("OrderOnly", "Family"), vSize="genbank.BOLD.c
 
   plot(x=taxa_col_gb_present$col.species.count, y=taxa_col_gb_present$genbank.known.count, pch=19, xlab="Number of species in Catalog of Life", ylab="Number of binomial species in GenBank", bty="n", log="xy")
   abline(a=0, b=1, col="red")
-  abline(a=0, b=.5, col="purple")
-  abline(a=0, b=.1, col="blue")
+  #abline(a=0, b=.5, col="purple")
+  #abline(a=0, b=.1, col="blue")
 
 
 ```
 
-Lines show 100%, 50%, 10% of Catalog of Life species in GenBank (note that this is based on species counts in familes, not 1:1 matching).
+Line shows 100% of Catalog of Life species in GenBank (note that this is based on species counts in families, not 1:1 matching).
 
 ## Funding
 
