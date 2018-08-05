@@ -385,3 +385,9 @@ merge_all_species <- function(x) {
   }
   return(result)
 }
+
+extract_ranks_from_all_species <- function(species_vector) {
+  taxa.resolved <-  as.data.frame(taxize::gnr_resolve(species_vector, data_source_ids = 1, best_match_only = TRUE, fields="all"), stringsAsFactors=FALSE)
+  all.taxa <- plyr::rbind.fill(apply(taxa.resolved, 1,extract_classification_from_gnr_resolve))
+  return(all.taxa)
+}
