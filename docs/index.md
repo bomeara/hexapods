@@ -31,7 +31,7 @@ The code for these analyses is all in https://github.com/bomeara/hexapods. The R
 
 ![plot of chunk plotgbvscol](figure/plotgbvscol-1.png)
 
-Line shows 100% of Catalog of Life species in GenBank (note that this is based on species counts in families, not 1:1 matching).
+Line shows 100% of Catalog of Life species in GenBank (note that this is based on species counts in families, not 1:1 matching). File for this is [taxa_col.csv.gz](taxa_col.csv.gz).
 
 ## Funding
 

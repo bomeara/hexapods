@@ -34,20 +34,20 @@
 
 familyrun <- drake_plan(
   taxa_df = get_hexapoda_info(),
-  write.csv(taxa_df, file=file_out("docs/taxa_raw.csv")),
+  write.csv(taxa_df, file=gzfile(file_out("docs/taxa_raw.csv.gz"))),
   #taxa_from_papers = extract_taxon_info_from_dir_of_papers(),
   #write.csv(taxa_from_papers, file=file_out("docs/taxa_from_papers.csv")),
   taxa_dark = wrap_dark_in_genbank(taxa_df),
-  write.csv(taxa_dark, file=file_out("docs/taxa_dark.csv")),
+  write.csv(taxa_dark, file=gzfile(file_out("docs/taxa_dark.csv.gz"))),
   #taxa_genbank = wrap_seqs_in_genbank(taxa_df),
   #write.csv(taxa_genbank, file=file_out("docs/taxa_genbank.csv")),
   all_species = get_all_species_from_col(),
   all_species_merged = merge_all_species(all_species),
-  write.csv(all_species_merged, file=file_out("docs/all_species_merged.csv")),
+  write.csv(all_species_merged, file=gzfile(file_out("docs/all_species_merged.csv.gz"))),
   all_species_hierarchy = extract_ranks_from_all_species(all_species_merged$childtaxa_name),
-  write.csv(all_species_hierarchy, file=file_out("docs/all_species_hierarchy.csv")),
   taxa_col = add_col_counts(taxa_dark, all_species_hierarchy),
-  write.csv(taxa_col, file=file_out("docs/taxa_col.csv")),
+  write.csv(all_species_hierarchy, file=gzfile(file_out("docs/all_species_hierarchy.csv.gz"))),
+  write.csv(taxa_col, file=gzfile(file_out("docs/taxa_col.csv.gz"))),
   report = knit(knitr_in("docs/index.Rmd"), file_out("docs/index.md"), quiet = TRUE)
 )
 
