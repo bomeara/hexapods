@@ -31,7 +31,7 @@ The code for these analyses is all in https://github.com/bomeara/hexapods. The R
 
 ![plot of chunk plotgbvscol](figure/plotgbvscol-1.png)
 
-Line shows 100% of Catalog of Life species in GenBank (note that this is based on species counts in families, not 1:1 matching). File for this is [taxa_col.csv.gz](taxa_col.csv.gz).
+Line shows 100% of Catalog of Life species in GenBank (note that this is based on species counts in families, not 1:1 matching). File with info on each family is [taxa_col.csv.gz](taxa_col.csv.gz); file with info on each species from the Catalog of Life is [all_species_hierarchy.csv.gz](all_species_hierarchy.csv.gz). See [here](https://github.com/bomeara/hexapods/blob/master/R/plan.R) for the R code to organize data generation and [here](https://github.com/bomeara/hexapods/blob/master/R/functions.R) for the functions used. Packages used are listed [here](https://github.com/bomeara/hexapods/blob/master/R/packages.R): main ones are `taxize`, `rphylotastic`, `googlesheets`, `rotl`, and `rentrez`.
 
 ## Funding
 
